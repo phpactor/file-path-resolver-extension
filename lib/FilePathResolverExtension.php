@@ -19,6 +19,7 @@ use Phpactor\FilePathResolver\FilteringPathResolver;
 use Phpactor\FilePathResolver\LoggingPathResolver;
 use Phpactor\MapResolver\Resolver;
 use Psr\Log\LogLevel;
+use RuntimeException;
 
 class FilePathResolverExtension implements Extension
 {
@@ -97,6 +98,7 @@ class FilePathResolverExtension implements Extension
             $suffix = DIRECTORY_SEPARATOR . $container->getParameter(self::PARAM_APP_NAME);
 
             $expanders = [
+                new ValueExpander('project_id', self::calculateProjectId($container->getParameter(self::PARAM_PROJECT_ROOT))),
                 new ValueExpander('project_root', $container->getParameter(self::PARAM_PROJECT_ROOT)),
                 new SuffixExpanderDecorator(new XdgCacheExpander('cache'), $suffix),
                 new SuffixExpanderDecorator(new XdgConfigExpander('config'), $suffix),
@@ -113,5 +115,15 @@ class FilePathResolverExtension implements Extension
 
             return new Expanders($expanders);
         });
+    }
+
+    public static function calculateProjectId(string $projectRoot): string
+    {
+        if (empty($projectRoot)) {
+            throw new RuntimeException(
+                'Project root must be a non-empty string'
+            );
+        }
+        return sprintf('%s-%s', basename($projectRoot), substr(md5($projectRoot), 0, 6));
     }
 }

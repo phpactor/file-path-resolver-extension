@@ -7,6 +7,7 @@ use Phpactor\Container\PhpactorContainer;
 use Phpactor\Extension\Logger\LoggingExtension;
 use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 use Phpactor\FilePathResolver\PathResolver;
+use RuntimeException;
 
 class FilePathResolverExtensionTest extends TestCase
 {
@@ -29,6 +30,58 @@ class FilePathResolverExtensionTest extends TestCase
 
         $this->assertEquals(__DIR__, $resolver->resolve('%application_root%'));
     }
+
+    public function testProjectId()
+    {
+        $resolver = $this->createResolver([
+            FilePathResolverExtension::PARAM_APPLICATION_ROOT => __DIR__,
+            FilePathResolverExtension::PARAM_PROJECT_ROOT => '/foobar/barfoo',
+        ]);
+
+        $this->assertEquals('barfoo-2c52a9', $resolver->resolve('%project_id%'));
+    }
+
+    public function testPathResolverLogging()
+    {
+        $resolver = $this->createResolver([
+            FilePathResolverExtension::PARAM_ENABLE_LOGGING => true,
+            FilePathResolverExtension::PARAM_APPLICATION_ROOT => __DIR__,
+        ]);
+
+        $this->assertEquals(__DIR__, $resolver->resolve('%application_root%'));
+    }
+
+    /**
+     * @dataProvider provideProjectIdCalculate
+     */
+    public function testProjectIdCalculate(string $input, ?string $expectedId = null, ?string $expectedException = null)
+    {
+        if ($expectedException) {
+            $this->expectException(RuntimeException::class);
+            $this->expectExceptionMessage($expectedException);
+        }
+        self::assertEquals($expectedId, FilePathResolverExtension::calculateProjectId($input));
+    }
+
+    public function provideProjectIdCalculate()
+    {
+        yield [
+            false,
+            null,
+            'Project root must be a non-empty string'
+        ];
+
+        yield [
+            '/foobar',
+            'foobar-1b9590',
+        ];
+
+        yield [
+            'foobar',
+            'foobar-3858f6',
+        ];
+    }
+
 
     public function createResolver(array $config): PathResolver
     {
