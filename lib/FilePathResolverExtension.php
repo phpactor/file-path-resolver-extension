@@ -18,6 +18,7 @@ use Phpactor\FilePathResolver\Filter\TokenExpandingFilter;
 use Phpactor\FilePathResolver\FilteringPathResolver;
 use Phpactor\FilePathResolver\LoggingPathResolver;
 use Phpactor\MapResolver\Resolver;
+use Phpactor\TextDocument\TextDocumentUri;
 use Psr\Log\LogLevel;
 use RuntimeException;
 
@@ -124,6 +125,11 @@ class FilePathResolverExtension implements Extension
                 'Project root must be a non-empty string'
             );
         }
-        return sprintf('%s-%s', basename($projectRoot), substr(md5($projectRoot), 0, 6));
+
+        return sprintf(
+            '%s-%s',
+            basename($projectRoot),
+            substr(md5(TextDocumentUri::fromString($projectRoot)->path()), 0, 6)
+        );
     }
 }

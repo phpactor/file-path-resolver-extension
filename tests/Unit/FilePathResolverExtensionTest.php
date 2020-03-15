@@ -77,8 +77,8 @@ class FilePathResolverExtensionTest extends TestCase
         ];
 
         yield [
-            'foobar',
-            'foobar-3858f6',
+            'file:///foobar',
+            'foobar-1b9590',
         ];
     }
 
