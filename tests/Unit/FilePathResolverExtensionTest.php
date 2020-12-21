@@ -16,10 +16,10 @@ class FilePathResolverExtensionTest extends TestCase
         $resolver = $this->createResolver([
         ]);
 
-        $this->assertContains('cache/phpactor', $resolver->resolve('%cache%'));
-        $this->assertContains('config/phpactor', $resolver->resolve('%config%'));
-        $this->assertContains('/phpactor', $resolver->resolve('%data%'));
-        $this->assertContains(getcwd(), $resolver->resolve('%project_root%'));
+        $this->assertStringContainsString('cache/phpactor', $resolver->resolve('%cache%'));
+        $this->assertStringContainsString('config/phpactor', $resolver->resolve('%config%'));
+        $this->assertStringContainsString('/phpactor', $resolver->resolve('%data%'));
+        $this->assertStringContainsString(getcwd(), $resolver->resolve('%project_root%'));
     }
 
     public function testPathResolverWithApplicationRoot()
