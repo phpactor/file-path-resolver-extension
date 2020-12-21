@@ -54,7 +54,7 @@ class FilePathResolverExtensionTest extends TestCase
     /**
      * @dataProvider provideProjectIdCalculate
      */
-    public function testProjectIdCalculate(string $input, ?string $expectedId = null, ?string $expectedException = null)
+    public function testProjectIdCalculate($input, ?string $expectedId = null, ?string $expectedException = null)
     {
         if ($expectedException) {
             $this->expectException(RuntimeException::class);
