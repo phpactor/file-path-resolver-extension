@@ -13,7 +13,8 @@
         "phpactor/container": "^1.0",
         "phpactor/file-path-resolver": "~0.7",
         "phpactor/logging-extension": "~0.3",
-        "phpactor/text-document": "^1.2"
+        "phpactor/text-document": "^1.2",
+        "php": "^7.3"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.0",
