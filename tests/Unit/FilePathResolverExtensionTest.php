@@ -11,7 +11,7 @@ use RuntimeException;
 
 class FilePathResolverExtensionTest extends TestCase
 {
-    public function testPathResolver()
+    public function testPathResolver(): void
     {
         $resolver = $this->createResolver([
         ]);
@@ -22,7 +22,7 @@ class FilePathResolverExtensionTest extends TestCase
         $this->assertStringContainsString(getcwd(), $resolver->resolve('%project_root%'));
     }
 
-    public function testPathResolverWithApplicationRoot()
+    public function testPathResolverWithApplicationRoot(): void
     {
         $resolver = $this->createResolver([
             FilePathResolverExtension::PARAM_APPLICATION_ROOT => __DIR__,
@@ -31,7 +31,7 @@ class FilePathResolverExtensionTest extends TestCase
         $this->assertEquals(__DIR__, $resolver->resolve('%application_root%'));
     }
 
-    public function testProjectId()
+    public function testProjectId(): void
     {
         $resolver = $this->createResolver([
             FilePathResolverExtension::PARAM_APPLICATION_ROOT => __DIR__,
@@ -41,7 +41,7 @@ class FilePathResolverExtensionTest extends TestCase
         $this->assertEquals('barfoo-2c52a9', $resolver->resolve('%project_id%'));
     }
 
-    public function testPathResolverLogging()
+    public function testPathResolverLogging(): void
     {
         $resolver = $this->createResolver([
             FilePathResolverExtension::PARAM_ENABLE_LOGGING => true,
@@ -54,7 +54,7 @@ class FilePathResolverExtensionTest extends TestCase
     /**
      * @dataProvider provideProjectIdCalculate
      */
-    public function testProjectIdCalculate($input, ?string $expectedId = null, ?string $expectedException = null)
+    public function testProjectIdCalculate($input, ?string $expectedId = null, ?string $expectedException = null): void
     {
         if ($expectedException) {
             $this->expectException(RuntimeException::class);

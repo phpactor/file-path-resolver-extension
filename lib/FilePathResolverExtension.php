@@ -39,7 +39,7 @@ class FilePathResolverExtension implements Extension
     /**
      * {@inheritDoc}
      */
-    public function configure(Resolver $schema)
+    public function configure(Resolver $schema): void
     {
         $schema->setDefaults([
             self::PARAM_PROJECT_ROOT => getcwd(),
@@ -53,13 +53,28 @@ class FilePathResolverExtension implements Extension
     /**
      * {@inheritDoc}
      */
-    public function load(ContainerBuilder $container)
+    public function load(ContainerBuilder $container): void
     {
         $this->registerPathResolver($container);
         $this->registerFilters($container);
     }
 
-    private function registerPathResolver(ContainerBuilder $container)
+    public static function calculateProjectId(string $projectRoot): string
+    {
+        if (empty($projectRoot)) {
+            throw new RuntimeException(
+                'Project root must be a non-empty string'
+            );
+        }
+
+        return sprintf(
+            '%s-%s',
+            basename($projectRoot),
+            substr(md5(TextDocumentUri::fromString($projectRoot)->path()), 0, 6)
+        );
+    }
+
+    private function registerPathResolver(ContainerBuilder $container): void
     {
         $container->register(self::SERVICE_FILE_PATH_RESOLVER, function (Container $container) {
             $filters = [];
@@ -85,7 +100,7 @@ class FilePathResolverExtension implements Extension
         });
     }
 
-    private function registerFilters(ContainerBuilder $container)
+    private function registerFilters(ContainerBuilder $container): void
     {
         $container->register('file_path_resolver.filter.canonicalizing', function () {
             return new CanonicalizingPathFilter();
@@ -116,20 +131,5 @@ class FilePathResolverExtension implements Extension
 
             return new Expanders($expanders);
         });
-    }
-
-    public static function calculateProjectId(string $projectRoot): string
-    {
-        if (empty($projectRoot)) {
-            throw new RuntimeException(
-                'Project root must be a non-empty string'
-            );
-        }
-
-        return sprintf(
-            '%s-%s',
-            basename($projectRoot),
-            substr(md5(TextDocumentUri::fromString($projectRoot)->path()), 0, 6)
-        );
     }
 }
