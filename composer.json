@@ -14,7 +14,7 @@
         "phpactor/file-path-resolver": "^0.8.3",
         "phpactor/logging-extension": "^0.3.4",
         "phpactor/text-document": "^1.2.3",
-        "php": "^7.3"
+        "php": "^7.3 || ^8.0"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.0",
